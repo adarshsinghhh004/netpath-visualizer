@@ -1,0 +1,87 @@
+/* Original Overlays and Effects */
+#scanlines{
+  position:fixed;inset:0;pointer-events:none;z-index:8888;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+  animation:scan-drift 12s linear infinite;
+}
+@keyframes scan-drift{0%{background-position:0 0}100%{background-position:0 100%}}
+
+#vignette{
+  position:fixed;inset:0;pointer-events:none;z-index:8887;
+  background:radial-gradient(ellipse 90% 90% at 50% 50%,transparent 50%,rgba(1,8,16,0.7) 100%);
+}
+
+#hint-bar{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  background:rgba(3,13,28,0.85);border:1px solid var(--border2);
+  border-radius:20px;padding:5px 16px;font-size:10px;color:var(--text);
+  z-index:10;pointer-events:none;white-space:nowrap;
+  letter-spacing:0.5px;backdrop-filter:blur(8px);
+  font-family:'Share Tech Mono',monospace;
+}
+#hint-bar strong{color:var(--teal)}
+
+#path-banner{
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  background:rgba(0,229,204,0.07);border:1px solid var(--teal);
+  border-radius:3px;padding:7px 20px;
+  font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--teal);
+  z-index:10;pointer-events:none;display:none;
+  box-shadow:0 0 30px rgba(0,229,204,0.15);text-align:center;white-space:nowrap;
+}
+#path-banner .pc{color:var(--green);font-size:14px}
+#nopath{
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  background:rgba(255,45,85,0.07);border:1px solid var(--red);
+  border-radius:3px;padding:7px 20px;
+  font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--red);
+  z-index:10;pointer-events:none;display:none;
+}
+#toast{
+  position:absolute;bottom:50px;left:50%;transform:translateX(-50%);
+  background:var(--panel2);border:1px solid var(--border2);
+  border-radius:3px;padding:6px 14px;font-size:11px;color:var(--white);
+  z-index:200;opacity:0;transition:opacity 0.25s;pointer-events:none;
+  white-space:nowrap;font-family:'Share Tech Mono',monospace;
+}
+
+#ctx{
+  position:absolute;display:none;z-index:500;
+  background:rgba(3,13,28,0.97);border:1px solid var(--border2);
+  border-radius:3px;padding:5px 0;min-width:155px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.8),0 0 20px rgba(0,229,204,0.04);
+  backdrop-filter:blur(12px);
+}
+.ctx-head{padding:4px 12px;font-size:9px;color:var(--muted);letter-spacing:2px;border-bottom:1px solid var(--border);margin-bottom:3px;font-family:'Orbitron',monospace}
+.cti{padding:6px 12px;font-size:12px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;transition:background 0.1s}
+.cti-g{color:var(--green)}.cti-g:hover{background:rgba(0,255,157,0.08)}
+.cti-o{color:var(--orange)}.cti-o:hover{background:rgba(255,140,66,0.08)}
+.cti-r{color:var(--red)}.cti-r:hover{background:rgba(255,45,85,0.08)}
+.ctx-div{height:1px;background:var(--border);margin:3px 0}
+#ctx-back{position:fixed;inset:0;z-index:499;display:none}
+
+#tt{
+  position:absolute;background:rgba(3,13,28,0.95);
+  border:1px solid var(--border2);padding:9px 12px;
+  border-radius:3px;font-size:11px;pointer-events:none;z-index:100;
+  display:none;min-width:150px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.7),0 0 15px rgba(0,229,204,0.06);
+  backdrop-filter:blur(8px);
+}
+.tt-id{font-family:'Orbitron',monospace;font-size:12px;color:var(--teal);margin-bottom:5px;font-weight:700}
+.tt-r{display:flex;justify-content:space-between;gap:10px;margin-bottom:2px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)}
+.tt-r span:last-child{color:var(--white)}
+
+@keyframes glitch{
+  0%{clip-path:inset(40% 0 61% 0);transform:translate(-4px,0)}
+  20%{clip-path:inset(92% 0 1% 0);transform:translate(4px,0)}
+  40%{clip-path:inset(43% 0 1% 0);transform:translate(-4px,0)}
+  60%{clip-path:inset(25% 0 58% 0);transform:translate(4px,0)}
+  80%{clip-path:inset(54% 0 7% 0);transform:translate(-4px,0)}
+  100%{clip-path:inset(58% 0 43% 0);transform:translate(0)}
+}
+#glitch-layer{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:50;opacity:0;transition:opacity 0.1s;
+}
+#glitch-layer.active{animation:glitch 0.15s linear;opacity:0.6}

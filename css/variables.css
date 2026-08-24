@@ -1,0 +1,22 @@
+/* Original Root Variables */
+:root {
+  --bg: #010810;
+  --panel: #030d1c;
+  --panel2: #051428;
+  --border: #0b1f38;
+  --border2: #163560;
+  --teal: #00e5cc;
+  --teal-dim: #009980;
+  --green: #00ff9d;
+  --orange: #ff8c42;
+  --red: #ff2d55;
+  --yellow: #ffd60a;
+  --purple: #bf5af2;
+  --blue: #0a84ff;
+  --white: #e8f4ff;
+  --muted: #2a4a6a;
+  --text: #7ab8d8;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--white);font-family:'Rajdhani',sans-serif}

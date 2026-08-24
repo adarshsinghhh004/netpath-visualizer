@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NETPATH // NEURAL ROUTING SYSTEM</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/boot.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/controls.css">
+<link rel="stylesheet" href="css/effects.css">
+</head>
+<body>
+
+<div id="scanlines"></div>
+<div id="vignette"></div>
+
+<div id="boot">
+  <div id="boot-logo">NETPATH<span>NEURAL ROUTING SYSTEM // v4.2.1</span></div>
+  <div id="boot-lines"></div>
+  <div id="boot-bar"><div id="boot-fill"></div></div>
+</div>
+
+<div id="app">
+  <div id="topbar">
+    <div id="logo">NETPATH<em>ROUTING VISUALIZER // DIJKSTRA ENGINE</em></div>
+    <div class="vdiv"></div>
+    <div style="display:flex;gap:3px">
+      <button class="tbtn on" id="tb-sel" onclick="setMode('select')">⊹ SELECT</button>
+      <button class="tbtn" id="tb-node" onclick="setMode('addNode')">+ ROUTER</button>
+      <button class="tbtn" id="tb-edge" onclick="setMode('addEdge')">⌁ LINK</button>
+      <button class="tbtn del" id="tb-del" onclick="setMode('delete')">✕ DELETE</button>
+    </div>
+    <div class="vdiv"></div>
+    <div style="display:flex;gap:3px;align-items:center">
+      <span style="font-size:9px;color:var(--muted);letter-spacing:1px;font-weight:700">EXEC:</span>
+      <button class="tbtn on" id="tb-step" onclick="setExecMode('step')">STEP</button>
+      <button class="tbtn" id="tb-auto" onclick="setExecMode('auto')">AUTO</button>
+    </div>
+    <div class="tspacer"></div>
+    <div id="sys-status"><div id="sdot"></div><span id="stext">AWAITING TOPOLOGY</span></div>
+  </div>
+
+  <div id="main">
+    <div id="lp">
+      <div class="ps">
+        <div class="pt">Routing</div>
+        <div class="src-dst-box">
+          <div class="sdr"><span class="sbadge sb-s">SRC</span><span class="sval" id="src-disp">—</span></div>
+          <div class="sdr"><span class="sbadge sb-d">DST</span><span class="sval" id="dst-disp">—</span></div>
+        </div>
+        <div class="hint-txt">Right-click router → set SRC / DST</div>
+        <button class="btn grn" onclick="runAlgo()">▶ RUN DIJKSTRA</button>
+        <button class="btn" onclick="stepAlgo()" id="btn-step">⊳ STEP ONCE</button>
+        <button class="btn orn" onclick="resetAlgo()">↺ RESET ALGO</button>
+      </div>
+
+      <div class="ps">
+        <div class="pt">Generate</div>
+        <div class="ig"><label class="lbl">Topology</label>
+          <select class="sel" id="gen-type">
+            <option value="random">Random</option>
+            <option value="mesh">Mesh Grid</option>
+            <option value="cluster">Clustered</option>
+            <option value="hier">Hierarchical</option>
+            <option value="sw">Small World</option>
+          </select>
+        </div>
+        <div class="ig"><label class="lbl">Nodes</label>
+          <div class="rrow">
+            <input type="range" class="rng" id="gen-n" min="8" max="80" value="30" oninput="document.getElementById('gn-v').textContent=this.value">
+            <span class="rval" id="gn-v">30</span>
+          </div>
+        </div>
+        <button class="btn pri" onclick="genNet()">⊞ GENERATE NETWORK</button>
+      </div>
+
+      <div class="ps">
+        <div class="pt">Link</div>
+        <div class="ig"><label class="lbl">Link Cost</label>
+          <input type="number" class="inp" id="ecost" value="10" min="1" max="999">
+        </div>
+        <div class="hint-txt">Switch to LINK mode → click two routers</div>
+      </div>
+
+      <div class="ps">
+        <div class="pt">Physics</div>
+        <div class="ig"><label class="lbl">Spring</label>
+          <div class="rrow"><input type="range" class="rng" id="spr-k" min="1" max="20" value="8" oninput="phyUpdate()"><span class="rval" id="spr-v">8</span></div>
+        </div>
+        <div class="ig"><label class="lbl">Repulsion</label>
+          <div class="rrow"><input type="range" class="rng" id="rep-k" min="100" max="3000" value="800" oninput="phyUpdate()"><span class="rval" id="rep-v">800</span></div>
+        </div>
+        <button class="btn" onclick="shuffleLayout()">⊙ RE-LAYOUT</button>
+      </div>
+
+      <div class="ps">
+        <div class="pt">Network</div>
+        <button class="btn" onclick="fitView()">⊡ FIT VIEW</button>
+        <button class="btn dng" onclick="clearAll()">⚠ CLEAR ALL</button>
+      </div>
+
+      <div style="padding:12px;margin-top:auto">
+        <div class="pt">Controls</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);line-height:2">
+          <div>Scroll → Zoom</div><div>Drag bg → Pan</div>
+          <div>Drag node → Move</div><div>Right-click → Menu</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="cv-wrap">
+      <canvas id="mc"></canvas>
+      <div id="glitch-layer"></div>
+      <div id="tt"></div>
+      <div id="hint-bar"><strong>SELECT</strong> — Right-click a router to assign Source / Destination</div>
+      <div id="path-banner"></div>
+      <div id="nopath">NO PATH EXISTS</div>
+      <div id="toast"></div>
+      <div id="ctx">
+        <div class="ctx-head" id="ctx-head">ROUTER</div>
+        <div class="cti cti-g" onclick="ctxSrc()">⬤ Set as SOURCE</div>
+        <div class="cti cti-o" onclick="ctxDst()">⬤ Set as DESTINATION</div>
+        <div class="ctx-div"></div>
+        <div class="cti cti-r" onclick="ctxDel()">✕ Delete Router</div>
+      </div>
+      <div id="ctx-back" onclick="hideCtx()"></div>
+    </div>
+
+    <div id="rp">
+      <div class="ps">
+        <div class="pt">Network Stats</div>
+        <div class="stat-grid">
+          <div class="scard"><div class="scard-lbl">Routers</div><div class="scard-val" id="st-n">0</div></div>
+          <div class="scard g"><div class="scard-lbl">Links</div><div class="scard-val" id="st-e">0</div></div>
+          <div class="scard o"><div class="scard-lbl">Avg Cost</div><div class="scard-val" id="st-ac">—</div></div>
+          <div class="scard y"><div class="scard-lbl">Density</div><div class="scard-val" id="st-d">0%</div></div>
+        </div>
+      </div>
+
+      <div class="ps">
+        <div class="pt">Algorithm</div>
+        <div class="algo-kv"><span>STEP</span><span id="a-step" style="color:var(--teal)">—</span></div>
+        <div class="algo-kv"><span>CURRENT</span><span id="a-cur" style="color:var(--red)">—</span></div>
+        <div class="algo-kv"><span>PATH COST</span><span id="a-cost" style="color:var(--green)">—</span></div>
+        <div class="algo-kv"><span>VISITED</span><span id="a-vis" style="color:var(--yellow)">0</span></div>
+        <div style="max-height:130px;overflow-y:auto;margin-top:6px">
+          <table class="atable"><thead><tr><th>NODE</th><th>DIST</th><th>PREV</th></tr></thead>
+          <tbody id="dtbody"></tbody></table>
+        </div>
+      </div>
+
+      <div class="ps" style="flex:1;display:flex;flex-direction:column;min-height:0">
+        <div class="pt">Event Log</div>
+        <div id="step-log"></div>
+      </div>
+
+      <div class="ps">
+        <div class="pt">Legend</div>
+        <div class="leg-grid">
+          <div class="leg-it"><div class="leg-dot" style="background:#1a4a8a;box-shadow:0 0 5px #1a4a8a"></div>Router</div>
+          <div class="leg-it"><div class="leg-dot" style="background:var(--green);box-shadow:0 0 5px var(--green)"></div>Source</div>
+          <div class="leg-it"><div class="leg-dot" style="background:var(--orange);box-shadow:0 0 5px var(--orange)"></div>Dest</div>
+          <div class="leg-it"><div class="leg-dot" style="background:var(--red);box-shadow:0 0 5px var(--red)"></div>Current</div>
+          <div class="leg-it"><div class="leg-dot" style="background:var(--yellow);box-shadow:0 0 5px var(--yellow)"></div>Frontier</div>
+          <div class="leg-it"><div class="leg-dot" style="background:var(--teal-dim);box-shadow:0 0 5px var(--teal-dim)"></div>Visited</div>
+          <div class="leg-it"><div class="leg-dot" style="background:var(--teal);box-shadow:0 0 8px var(--teal)"></div>Path</div>
+          <div class="leg-it"><div class="leg-dot" style="background:var(--purple);box-shadow:0 0 5px var(--purple)"></div>Evaluated</div>
+        </div>
+      </div>
+
+      <div class="spd-row">
+        <span>SPD</span>
+        <input type="range" class="rng" id="spd" min="50" max="1000" value="750" style="flex:1" oninput="onSpdChange()">
+        <span id="spd-v" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--teal)">350ms</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/network.js"></script>
+<script src="js/physics.js"></script>
+<script src="js/generators.js"></script>
+<script src="js/algorithms.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/interactions.js"></script>
+<script src="js/boot.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

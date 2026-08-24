@@ -1,0 +1,24 @@
+/* Original Boot Sequence Styles */
+#boot{
+  position:fixed;inset:0;background:#010810;z-index:9999;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:8vh 10vw;
+  transition:opacity 1s ease;
+}
+#boot-logo{
+  font-family:'Orbitron',sans-serif;font-size:clamp(28px,4vw,52px);
+  font-weight:900;letter-spacing:8px;color:var(--teal);
+  text-shadow:0 0 40px rgba(0,229,204,0.8),0 0 80px rgba(0,229,204,0.3);
+  margin-bottom:40px;
+}
+#boot-logo span{color:var(--muted);font-weight:400;font-size:0.35em;display:block;letter-spacing:12px;margin-top:4px}
+#boot-lines{font-family:'Share Tech Mono',monospace;font-size:clamp(10px,1.2vw,14px);line-height:2.2;color:var(--teal-dim)}
+.bl{opacity:0;transform:translateX(-8px);transition:opacity 0.25s,transform 0.25s;white-space:nowrap}
+.bl.show{opacity:1;transform:none}
+.bl-ok{color:var(--green);margin-left:2ch}
+.bl-warn{color:var(--yellow)}
+.bl-err{color:var(--red)}
+#boot-bar{margin-top:30px;width:min(400px,60vw);height:2px;background:var(--border2);border-radius:2px;overflow:hidden}
+#boot-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal-dim),var(--teal));transition:width 0.3s;box-shadow:0 0 12px var(--teal)}
+#boot-cursor{display:inline-block;width:8px;height:14px;background:var(--teal);animation:blink 0.7s infinite;vertical-align:middle;margin-left:4px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}

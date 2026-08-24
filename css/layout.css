@@ -1,0 +1,50 @@
+/* Original App Layout Styles */
+#app{display:flex;flex-direction:column;height:100vh;opacity:0;transition:opacity 0.8s}
+#app.visible{opacity:1}
+
+#topbar{
+  height:48px;flex-shrink:0;
+  background:rgba(3,13,28,0.95);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;gap:16px;padding:0 16px;
+  backdrop-filter:blur(10px);
+  position:relative;z-index:100;
+}
+#topbar::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--teal),transparent);
+  opacity:0.4;
+}
+#logo{
+  font-family:'Orbitron',sans-serif;font-size:15px;font-weight:900;
+  letter-spacing:4px;color:var(--teal);
+  text-shadow:0 0 20px rgba(0,229,204,0.6);
+  white-space:nowrap;flex-shrink:0;
+}
+#logo em{font-style:normal;color:var(--muted);font-size:8px;display:block;letter-spacing:5px;margin-top:-2px;font-weight:400}
+.vdiv{width:1px;height:24px;background:var(--border2);flex-shrink:0}
+.tspacer{flex:1}
+
+#main{display:flex;flex:1;overflow:hidden;min-height:0}
+
+#lp{
+  width:210px;flex-shrink:0;background:rgba(3,13,28,0.92);
+  border-right:1px solid var(--border2);display:flex;
+  flex-direction:column;overflow-y:auto;overflow-x:hidden;
+}
+
+#rp{
+  width:230px;flex-shrink:0;background:rgba(3,13,28,0.92);
+  border-left:1px solid var(--border2);display:flex;
+  flex-direction:column;overflow-y:auto;
+}
+
+#cv-wrap{flex:1;position:relative;overflow:hidden;background:var(--bg)}
+#cv-wrap::before{
+  content:'';position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 50%,rgba(0,30,60,0.35) 0%,transparent 70%),
+    radial-gradient(ellipse 100% 60% at 50% 100%,rgba(0,10,25,0.6) 0%,transparent 60%);
+  pointer-events:none;
+}
+#mc{position:absolute;top:0;left:0;z-index:2;cursor:default}
